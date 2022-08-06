@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SqlTrackerTest {
 
@@ -55,54 +54,41 @@ public class SqlTrackerTest {
     @Test
     public void whenSaveItemAndFindByGeneratedIdThenMustBeTheSame() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         assertThat(tracker.findById(item.getId()), is(item));
     }
 
     @Test
     public void whenReplaceItemAndFindIt() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         item.setName("soup");
         tracker.replace(item.getId(), item);
-        assertThat(tracker.findById(item.getId()), is(item));
+        assertThat(tracker.findById(item.getId()).getName(), is(item.getName()));
     }
 
     @Test
     public void whenDeleteItemAndReturnTrue() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item = new Item("item");
-        tracker.add(item);
-        assertTrue(tracker.delete(item.getId()));
+        Item item = tracker.add(new Item("item"));
+        tracker.delete(item.getId());
+        assertNull(tracker.findById(item.getId()));
     }
 
     @Test
     public void whenFindAllItems() {
         SqlTracker tracker = new SqlTracker(connection);
-        List<Item> items = new ArrayList<>();
-        Item itemOne = new Item("one");
-        Item itemTwo = new Item("two");
-        tracker.add(itemOne);
-        tracker.add(itemTwo);
-        items.add(itemOne);
-        items.add(itemTwo);
-        assertThat(tracker.findAll(), is(items));
+        Item itemOne = tracker.add(new Item("one"));
+        Item itemTwo = tracker.add(new Item("two"));
+        assertThat(tracker.findAll(), is(List.of(itemOne, itemTwo)));
     }
 
     @Test
     public void whenFindItemsForName() {
         SqlTracker tracker = new SqlTracker(connection);
-        List<Item> items = new ArrayList<>();
-        Item itemOne = new Item("one");
-        Item itemTwo = new Item("two");
-        Item itemThree = new Item("two");
-        tracker.add(itemOne);
-        tracker.add(itemTwo);
-        tracker.add(itemThree);
-        items.add(itemTwo);
-        items.add(itemThree);
-        assertThat(tracker.findByName(itemTwo.getName()), is(items));
+        Item itemOne = tracker.add(new Item("one"));
+        Item itemTwo = tracker.add(new Item("two"));
+        Item itemThree = tracker.add(new Item("two"));
+        assertThat(tracker.findByName(itemTwo.getName()), is(List.of(itemTwo, itemThree)));
     }
 }
