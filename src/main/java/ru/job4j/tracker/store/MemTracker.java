@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MemTracker implements Store {
+public class MemTracker implements Store, AutoCloseable {
 
     private final List<Item> items = new ArrayList<>();
 
@@ -72,4 +72,8 @@ public class MemTracker implements Store {
         return index;
     }
 
+    @Override
+    public void close() throws Exception {
+
+    }
 }
