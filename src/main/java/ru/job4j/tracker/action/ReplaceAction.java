@@ -21,9 +21,9 @@ public class ReplaceAction implements UserAction {
 
     @Override
     public boolean execute(Input input, Store tracker) {
-        int id = Integer.parseInt(input.askStr("Enter id: "));
+        int id = input.askInt("Enter id: ");
         String name = input.askStr("Enter name: ");
-        if (tracker.replace(id, new Item(name))) {
+        if (name != null && tracker.replace(id, new Item(name))) {
             out.println("Item is successfully replaced!");
         } else {
             out.println("Wrong id!");
