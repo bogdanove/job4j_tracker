@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.tracker.model.Item;
 import ru.job4j.tracker.model.Role;
 import ru.job4j.tracker.model.User;
 import ru.job4j.tracker.model.UserMessenger;
@@ -28,11 +29,16 @@ public class HbmRun {
             ));
             user.setRole(role);
             create(user, sf);
-            var stored = sf.openSession()
-                    .createQuery("from User where id = :fId", User.class)
-                    .setParameter("fId", user.getId())
-                    .getSingleResult();
-            stored.getMessengers().forEach(System.out::println);
+            var item = new Item();
+            item.setName("Learn Hibernate");
+            item.setParticipates(List.of(user));
+            create(item, sf);
+            sf.openSession()
+                    .createQuery("from Item where id = :fId", Item.class)
+                    .setParameter("fId", item.getId())
+                    .getSingleResult()
+                    .getParticipates()
+                    .forEach(System.out::println);
         }  catch (Exception e) {
             e.printStackTrace();
         } finally {

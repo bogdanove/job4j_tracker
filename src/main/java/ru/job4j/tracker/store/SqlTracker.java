@@ -138,7 +138,7 @@ public class SqlTracker implements Store, AutoCloseable {
         return new Item(
                 rs.getInt("id"),
                 rs.getString("name"),
-                rs.getTimestamp("created").toLocalDateTime()
+                rs.getTimestamp("created").toLocalDateTime(), null
         );
     }
 }
